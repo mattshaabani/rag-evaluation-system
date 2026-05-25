@@ -1,0 +1,23 @@
+# environment
+.env
+__pycache__/
+*.pyc
+*.pyo
+.ipynb_checkpoints/
+
+# data (too large for git)
+data/raw/
+data/processed/
+
+# conda artifacts
+*.egg-info/
+dist/
+build/
+
+# IDE
+.vscode/
+.idea/
+
+# OS
+.DS_Store
+Thumbs.db
