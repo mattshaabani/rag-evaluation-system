@@ -80,6 +80,7 @@ class RetrievalConfig:
 # ─────────────────────────────────────────────
 
 class GenerationConfig:
+    backend:     str   = _rag_cfg["generation"]["backend"]
     model:       str   = _rag_cfg["generation"]["model"]
     temperature: float = _rag_cfg["generation"]["temperature"]
     max_tokens:  int   = _rag_cfg["generation"]["max_tokens"]
@@ -138,6 +139,10 @@ class EnvSettings(BaseSettings):
     # App
     app_env:   str = Field(default="development")
     log_level: str = Field(default="INFO")
+
+    # HuggingFace
+    hf_api_token: str = Field(default="")
+    hf_api_url:   str = Field(default="https://api-inference.huggingface.co/models")
 
 
 # ─────────────────────────────────────────────
