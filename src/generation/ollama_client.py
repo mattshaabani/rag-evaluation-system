@@ -1,27 +1,16 @@
 """
 src/generation/ollama_client.py
 
-Ollama LLM client for local inference.
-Ollama runs open-source models (Llama 3.1, Mistral, Phi-3)
-completely locally — no API key, no cost, no data leaving your machine.
-
-How Ollama works:
-    1. You install Ollama (ollama.ai)
-    2. You pull a model: `ollama pull llama3.1`
-    3. Ollama runs a local HTTP server on port 11434
-    4. We send requests to that server — same as any API
+Ollama LLM client for local inference + factory function to select
+between Ollama and HuggingFace backends based on config.
 
 Usage:
-    from src.generation.ollama_client import OllamaClient
-    client   = OllamaClient()
-    response = client.generate(
-        system="You are helpful.",
-        user="What is RAG?",
-    )
+    from src.generation.ollama_client import get_llm_client
+    client   = get_llm_client()
+    response = client.generate(system="You are helpful.", user="What is RAG?")
     print(response.content)
 """
 
-from readline import backend
 import time
 import requests
 from dataclasses import dataclass
@@ -78,7 +67,7 @@ class OllamaClient:
     Ollama API endpoints we use:
         POST /api/chat    — multi-turn chat with system + user messages
         GET  /api/tags    — list available models
-        GET  /           — health check
+        GET  /            — health check
 
     Temperature explained:
         The LLM at each step computes a probability distribution
@@ -117,11 +106,7 @@ class OllamaClient:
         })
 
     def health_check(self) -> bool:
-        """
-        Check if Ollama server is running.
-        Call this before the first generate() to give a clear
-        error message if Ollama isn't started.
-        """
+        """Check if Ollama server is running."""
         try:
             response = requests.get(
                 f"{self.base_url}",
@@ -158,12 +143,7 @@ class OllamaClient:
 
         Returns:
             LLMResponse with content, token counts, and latency.
-
-        Raises:
-            ConnectionError: If Ollama server is not running.
-            RuntimeError:    If the model returns an error.
         """
-        # Check server is running
         if not self.health_check():
             raise ConnectionError(
                 f"Cannot connect to Ollama at {self.base_url}. "
@@ -207,10 +187,7 @@ class OllamaClient:
         latency_ms = (time.time() - start_time) * 1000
         data       = response.json()
 
-        # Extract content from Ollama response structure
-        content = data.get("message", {}).get("content", "")
-
-        # Token counts (Ollama provides these)
+        content       = data.get("message", {}).get("content", "")
         prompt_tokens = data.get("prompt_eval_count", 0)
         output_tokens = data.get("eval_count", 0)
 
@@ -223,9 +200,9 @@ class OllamaClient:
         )
 
         logger.info(f"LLM generation complete", extra={
-            "model":         self.model,
-            "total_tokens":  llm_response.total_tokens,
-            "latency_ms":    round(latency_ms),
+            "model":          self.model,
+            "total_tokens":   llm_response.total_tokens,
+            "latency_ms":     round(latency_ms),
             "tokens_per_sec": round(llm_response.tokens_per_second, 1),
         })
 
@@ -238,7 +215,6 @@ class OllamaClient:
     ) -> LLMResponse:
         """
         Generate using the output of a PromptTemplate.format() call.
-        Convenience method so you don't unpack the dict manually.
 
         Usage:
             template = RAGPromptTemplate()
@@ -250,26 +226,33 @@ class OllamaClient:
             user=template_output["user"],
             **kwargs,
         )
-    
-    def get_llm_client():
-        """
-        Factory function — returns the right LLM client based on config.
-        Every other file imports this instead of a specific client.
 
-        Usage:
-            from src.generation.ollama_client import get_llm_client
-            client = get_llm_client()
-            response = client.generate(system=..., user=...)
-        """
-        backend = settings.generation.backend
 
-        if backend == "huggingface":
-            from src.generation.hf_client import HuggingFaceClient
-            return HuggingFaceClient()
-        elif backend == "ollama":
-            return OllamaClient()
-        else:
-            raise ValueError(
-                f"Unknown backend '{backend}'. "
-                f"Choose 'ollama' or 'huggingface' in rag_config.yaml"
-            )
+# ─────────────────────────────────────────────
+# 3. Factory function
+# ─────────────────────────────────────────────
+
+def get_llm_client():
+    """
+    Factory function — returns the right LLM client based on config.
+
+    Backends:
+        "anthropic"    → Claude API (recommended, works in Iran)
+        "huggingface"  → HuggingFace Inference API
+        "ollama"       → Local Ollama server
+    """
+    backend = settings.generation.backend
+
+    if backend == "anthropic":
+        from src.generation.anthropic_client import AnthropicClient
+        return AnthropicClient()
+    elif backend == "huggingface":
+        from src.generation.hf_client import HuggingFaceClient
+        return HuggingFaceClient()
+    elif backend == "ollama":
+        return OllamaClient()
+    else:
+        raise ValueError(
+            f"Unknown backend '{backend}'. "
+            f"Choose 'anthropic', 'ollama' or 'huggingface' in rag_config.yaml"
+        )

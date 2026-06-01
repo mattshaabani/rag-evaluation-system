@@ -144,6 +144,9 @@ class EnvSettings(BaseSettings):
     hf_api_token: str = Field(default="")
     hf_api_url:   str = Field(default="https://api-inference.huggingface.co/models")
 
+    # Anthropic
+    anthropic_api_key: str = Field(default="")
+
 
 # ─────────────────────────────────────────────
 # 11. Master settings object
