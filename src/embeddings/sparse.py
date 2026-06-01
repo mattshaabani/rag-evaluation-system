@@ -18,6 +18,7 @@ import numpy as np
 import re
 from src.data.chunker import Chunk
 from src.utils.logger import get_logger
+from src.utils.config import settings
 
 logger = get_logger(__name__)
 
