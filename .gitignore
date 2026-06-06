@@ -25,3 +25,10 @@ Thumbs.db
 # MLflow
 mlflow.db
 mlruns/
+
+# Data files
+data/raw/*.pdf
+data/raw/*.txt
+data/processed/
+mlruns/
+mlflow.db
