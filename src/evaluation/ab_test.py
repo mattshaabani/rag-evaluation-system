@@ -56,7 +56,7 @@ class ChunkingStrategyABTest:
         self.embedder  = DenseEmbedder()
 
         # Set up MLflow — runs locally, no server needed
-        mlflow.set_tracking_uri("mlruns")
+        mlflow.set_tracking_uri("sqlite:///mlflow.db")
         mlflow.set_experiment(self.EXPERIMENT_NAME)
 
         logger.info(f"Initialized A/B test", extra={
@@ -159,11 +159,12 @@ class ChunkingStrategyABTest:
 
             # ── Log all metrics to MLflow ──
             for name, value in avg_retrieval.items():
-                mlflow.log_metric(name, round(value, 4))
+                clean_name = name.replace("@", "_at_")  # MLflow doesn't allow '@' in metric names
+                mlflow.log_metric(clean_name, round(value, 4))
 
             for name, value in avg_ragas.items():
-                mlflow.log_metric(name, round(value, 4))
-
+                clean_name = name.replace("@", "_at_")  # MLflow doesn't allow '@' in metric names
+                mlflow.log_metric(clean_name, round(value, 4))
             # ── Log evaluation report as artifact ──
             report = {
                 "strategy":          strategy,
@@ -173,7 +174,7 @@ class ChunkingStrategyABTest:
                 "ragas_metrics":     avg_ragas,
             }
 
-            report_path = Path(f"data/eval_datasets/{strategy}_report.json")
+            report_path = Path(f"src/data/eval_datasets/{strategy}_report.json")
             report_path.parent.mkdir(parents=True, exist_ok=True)
             report_path.write_text(json.dumps(report, indent=2))
             mlflow.log_artifact(str(report_path))
@@ -228,10 +229,12 @@ class ChunkingStrategyABTest:
                 all_results[strategy] = results
 
             except Exception as e:
+                import traceback
                 logger.error(f"Strategy failed", extra={
                     "strategy": strategy,
                     "error":    str(e),
                 })
+                traceback.print_exc()
 
         logger.info(f"A/B test complete", extra={
             "strategies_tested": list(all_results.keys())
