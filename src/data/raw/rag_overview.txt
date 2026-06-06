@@ -1,0 +1,19 @@
+Retrieval Augmented Generation (RAG) is a technique that combines information retrieval with large language model generation. Instead of relying solely on the knowledge encoded in model parameters during training, RAG systems retrieve relevant documents from an external knowledge base at inference time.
+
+The RAG pipeline consists of two main components. The first is the retrieval component, which uses dense vector search or sparse keyword search to find relevant documents from a corpus. The second is the generation component, which uses a large language model to produce an answer conditioned on both the query and the retrieved documents.
+
+Vector embeddings are numerical representations of text that capture semantic meaning. Similar texts produce similar embeddings, enabling semantic search beyond simple keyword matching. Popular embedding models include sentence-transformers models like all-MiniLM-L6-v2, which produces 384-dimensional vectors.
+
+Chunking is the process of splitting large documents into smaller pieces before embedding. Common strategies include sliding window chunking, which splits text at fixed token intervals with overlap, semantic chunking, which splits at topic boundaries detected by embedding similarity, and hierarchical chunking, which creates chunks at multiple granularity levels simultaneously.
+
+BM25 is a classical sparse retrieval algorithm based on term frequency and inverse document frequency. It scores documents by how often query terms appear, weighted by how rare those terms are across the corpus. BM25 excels at exact keyword matching and is often combined with dense retrieval in hybrid search systems.
+
+Hybrid search combines dense semantic search with sparse keyword search using Reciprocal Rank Fusion. RRF merges ranked lists from multiple retrieval systems by assigning each document a score based on its rank position rather than its raw similarity score. This makes hybrid search robust to score scale differences between systems.
+
+Evaluation of RAG systems requires measuring both retrieval quality and answer quality. Retrieval metrics include precision at K, recall at K, mean reciprocal rank, and normalized discounted cumulative gain. Answer quality metrics include faithfulness, which measures grounding in context, and answer relevancy, which measures whether the answer addresses the question.
+
+MLflow is an open source platform for managing the machine learning lifecycle. It provides experiment tracking, where parameters and metrics are logged for each run, model registry for versioning trained models, and a web UI for comparing experiments. In RAG systems, MLflow tracks chunking strategy comparisons and evaluation metrics across runs.
+
+Fine-tuning adapts a pretrained language model to a specific domain or task by continuing training on domain-specific data. Parameter efficient fine-tuning methods like LoRA reduce the number of trainable parameters by decomposing weight updates into low-rank matrices, making fine-tuning feasible on consumer hardware.
+
+The attention mechanism is the core building block of transformer models. It computes a weighted sum of value vectors, where weights are determined by the similarity between query and key vectors. Multi-head attention runs multiple attention operations in parallel, allowing the model to attend to information from different representation subspaces simultaneously.

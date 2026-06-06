@@ -1,0 +1,26 @@
+{
+  "strategy": "hierarchical",
+  "n_chunks": 4,
+  "n_queries": 10,
+  "retrieval_metrics": {
+    "precision@1": 0.4,
+    "recall@1": 0.4,
+    "ndcg@1": 0.4,
+    "precision@3": 0.5666666666666667,
+    "recall@3": 1.7,
+    "ndcg@3": 1.1416508275000203,
+    "precision@5": 0.4,
+    "recall@5": 2.0,
+    "ndcg@5": 1.2708537949220382,
+    "precision@10": 0.2,
+    "recall@10": 2.0,
+    "ndcg@10": 1.2708537949220382,
+    "mrr": 0.6499999999999999
+  },
+  "ragas_metrics": {
+    "faithfulness": 0.5139776140451431,
+    "answer_relevancy": 0.4839368134737015,
+    "context_precision": 0.21977713592350484,
+    "context_recall": 0.5139776140451431
+  }
+}

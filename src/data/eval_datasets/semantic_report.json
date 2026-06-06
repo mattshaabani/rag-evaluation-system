@@ -1,0 +1,26 @@
+{
+  "strategy": "semantic",
+  "n_chunks": 27,
+  "n_queries": 10,
+  "retrieval_metrics": {
+    "precision@1": 0.1,
+    "recall@1": 0.1,
+    "ndcg@1": 0.1,
+    "precision@3": 0.03333333333333333,
+    "recall@3": 0.1,
+    "ndcg@3": 0.1,
+    "precision@5": 0.08,
+    "recall@5": 0.4,
+    "ndcg@5": 0.2160558421703625,
+    "precision@10": 0.04,
+    "recall@10": 0.4,
+    "ndcg@10": 0.2160558421703625,
+    "mrr": 0.15999999999999998
+  },
+  "ragas_metrics": {
+    "faithfulness": 0.6304668843746185,
+    "answer_relevancy": 0.4839368134737015,
+    "context_precision": 0.3914757876098156,
+    "context_recall": 0.6304668843746185
+  }
+}
