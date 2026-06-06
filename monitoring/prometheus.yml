@@ -1,0 +1,17 @@
+global:
+  scrape_interval: 15s      # scrape metrics every 15 seconds
+  evaluation_interval: 15s
+
+scrape_configs:
+  # Scrape Prometheus itself
+  - job_name: "prometheus"
+    static_configs:
+      - targets: ["localhost:9090"]
+
+  # Scrape our FastAPI app
+  # FastAPI exposes metrics at GET /metrics
+  # prometheus-fastapi-instrumentator handles this automatically
+  - job_name: "rag-api"
+    static_configs:
+      - targets: ["api:8080"]
+    metrics_path: "/metrics"
