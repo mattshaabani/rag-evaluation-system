@@ -1,0 +1,42 @@
+[
+    {
+        "question": "What is Retrieval Augmented Generation?",
+        "answer": "RAG is a technique that combines information retrieval with large language model generation, retrieving relevant documents from an external knowledge base at inference time."
+    },
+    {
+        "question": "What are the two main components of a RAG pipeline?",
+        "answer": "The retrieval component which finds relevant documents using vector or keyword search, and the generation component which uses an LLM to produce answers conditioned on the query and retrieved documents."
+    },
+    {
+        "question": "What are vector embeddings?",
+        "answer": "Vector embeddings are numerical representations of text that capture semantic meaning, where similar texts produce similar embeddings enabling semantic search."
+    },
+    {
+        "question": "What is sliding window chunking?",
+        "answer": "Sliding window chunking splits text at fixed token intervals with overlap between consecutive chunks."
+    },
+    {
+        "question": "How does BM25 work?",
+        "answer": "BM25 scores documents by how often query terms appear weighted by how rare those terms are across the corpus using term frequency and inverse document frequency."
+    },
+    {
+        "question": "What is Reciprocal Rank Fusion?",
+        "answer": "RRF merges ranked lists from multiple retrieval systems by assigning scores based on rank position rather than raw similarity scores."
+    },
+    {
+        "question": "What metrics are used to evaluate RAG retrieval quality?",
+        "answer": "Precision at K, recall at K, mean reciprocal rank, and normalized discounted cumulative gain."
+    },
+    {
+        "question": "What is MLflow used for?",
+        "answer": "MLflow is used for managing the ML lifecycle including experiment tracking, model registry, and comparing experiments through a web UI."
+    },
+    {
+        "question": "What is the attention mechanism?",
+        "answer": "The attention mechanism computes a weighted sum of value vectors where weights are determined by similarity between query and key vectors."
+    },
+    {
+        "question": "What is LoRA?",
+        "answer": "LoRA is a parameter efficient fine-tuning method that reduces trainable parameters by decomposing weight updates into low-rank matrices."
+    }
+]
